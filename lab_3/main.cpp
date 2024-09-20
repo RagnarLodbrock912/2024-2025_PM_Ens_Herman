@@ -16,10 +16,10 @@ int main() {
         int x, i;
         cout << "Enter x and i ";
         cin >> x >> i;
-        if (binary(x).length() > i){
+        if (binary(x).length() > i || i >= 0){
             cout <<  binary(x)[i];
         } else {
-            cout << "i is bigger than amount of x`s bits";
+            cout << "i is bigger than amount of x`s bits or less than 0";
         }
         
         return 0;
