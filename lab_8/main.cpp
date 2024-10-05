@@ -85,6 +85,8 @@ void addWord (string& longWords, string word) {
 int main() {
     string line;
     vector<string> list;
+    int amount;
+    cin >> amount;
 
     ifstream in("../input.txt");
     
@@ -92,6 +94,7 @@ int main() {
         cout << "Cannot open file" << endl;
         return 1;
     }
+
     
     while (getline(in, line)) {
         string S = "";
@@ -103,7 +106,7 @@ int main() {
                 }
                 S = "";
             } else {
-                S += (line[i] == ',' || line[i] == '.') ?  "" : string(1, line[i]);
+                S += (ispunct(line[i]) != 0) ?  "" : string(1, line[i]);
             }
         }
     }
@@ -111,7 +114,7 @@ int main() {
     sort(list.begin(), list.end(), compare);
 
     string res = "";
-    for (int i = 0; (i < list.size()) && (i < 2000); i++) {
+    for (int i = 0; (i < list.size()) && (i < amount); i++) {
         res += list[i] + ": " + to_string(countVowelPairs(list[i])) + "\n";
     }
     
@@ -202,11 +205,11 @@ int main() {
         line3 += " ";
         for (int i = 0; i < line3.length(); i++) {
             if (line3[i] == ' ') {
-                if (maxLen < ((line3[i - 1] == ',' || line3[i - 1] == '.') ? wrd.length() - 1 : wrd.length())) {
+                if (maxLen < ((ispunct(line3[i]) != 0) ? wrd.length() - 1 : wrd.length())) {
                     longWords = "";
                     addWord(longWords, wrd);
                     maxLen = wrd.length();
-                } else if (maxLen == ((line3[i - 1] == ',' || line3[i - 1] == '.') ? wrd.length() - 1 : wrd.length())) {
+                } else if (maxLen == ((ispunct(line3[i]) != 0) ? wrd.length() - 1 : wrd.length())) {
                     addWord(longWords, wrd);
                 }
                 text.push_back(wrd);
