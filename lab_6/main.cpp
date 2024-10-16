@@ -112,68 +112,68 @@ int main() {
         cout << sequence2[i] << " ";
     }
 
-    // int n, m;
-    // cout << "\nEnter m and n ";
-    // cin >> m >> n;
-    // vector<vector<int>> matrix (m);
+    int n, m;
+    cout << "\nEnter m and n ";
+    cin >> m >> n;
+    vector<vector<int>> matrix (m);
 
-    // for (int i = 0; i < m; i++) {
-    //     matrix[i].resize(n);
-    //     for (int j = 0; j < n; j++) {
-    //         cin >> matrix[i][j];
-    //     }
-    // }
+    for (int i = 0; i < m; i++) {
+        matrix[i].resize(n);
+        for (int j = 0; j < n; j++) {
+            cin >> matrix[i][j];
+        }
+    }
 
-    // long long mMax = LLONG_MIN;
-    // int maxIndex = 0;
-    // for (int i = 0; i < m; i++) {
-    //     int S = 1;
-    //     for (int j = 0; j < n; j++) {
-    //         S *= matrix[i][j];
-    //     }
-    //     maxIndex = (S > mMax) ? i : maxIndex;
-    //     mMax = (S > mMax) ? S : mMax;
-    // }
-    // for (int j = 0; j < n; j++) {
-    //     matrix[maxIndex][j] = mMax;
-    // }
+    long long mMax = LLONG_MIN;
+    int maxIndex = 0;
+    for (int i = 0; i < m; i++) {
+        int S = 1;
+        for (int j = 0; j < n; j++) {
+            S *= matrix[i][j];
+        }
+        maxIndex = (S > mMax) ? i : maxIndex;
+        mMax = (S > mMax) ? S : mMax;
+    }
+    for (int j = 0; j < n; j++) {
+        matrix[maxIndex][j] = mMax;
+    }
 
 
-    // for (int i = 0; i < m; i++) {
-    //     for (int j = 0; j < n; j++) {
-    //         cout << matrix[i][j] << " ";
-    //     }
-    //     cout << "\n";
-    // }
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << matrix[i][j] << " ";
+        }
+        cout << "\n";
+    }
 
-    // int max3;
-    // cout << "Enter amount of numbers ";
-    // cin >> max3;
-    // int arr[2*max3];
-    // for (int i = 0; i < max3; i++) {
-    //     cin >> arr[i];
-    // }
+    int max3;
+    cout << "Enter amount of numbers ";
+    cin >> max3;
+    int arr[2*max3];
+    for (int i = 0; i < max3; i++) {
+        cin >> arr[i];
+    }
     
-    // int ji = 0;
-    // for (int i = 0; i < max3; i++) {
-    //     if (!prime(arr[i])) {
-    //         arr[ji++] = arr[i];
-    //     }
-    // }
-    // max3 = ji;
+    int ji = 0;
+    for (int i = 0; i < max3; i++) {
+        if (!prime(arr[i])) {
+            arr[ji++] = arr[i];
+        }
+    }
+    max3 = ji;
     
 
-    // for (int i = 0; i < max3; i++) {
-    //     if (isPerfectCube(arr[i])) {
-    //         max3++;
-    //         for (int j = max3 - 1; j > i; j--) {
-    //             arr[j] =  arr[j - 1];
-    //         }
-    //         i++;
-    //     }
-    // }
-    // for (int i = 0; i < max3; i++) {
-    //     cout << arr[i] << " ";
-    // }
+    for (int i = 0; i < max3; i++) {
+        if (isPerfectCube(arr[i])) {
+            max3++;
+            for (int j = max3 - 1; j > i; j--) {
+                arr[j] =  arr[j - 1];
+            }
+            i++;
+        }
+    }
+    for (int i = 0; i < max3; i++) {
+        cout << arr[i] << " ";
+    }
     return 0;
 }
