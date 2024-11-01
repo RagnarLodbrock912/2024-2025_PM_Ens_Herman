@@ -52,4 +52,5 @@ int main ()
     for (int i = 0; i < max; ++i) {
         cout << arr[i] << " ";
     }
+   return 0;
 }
