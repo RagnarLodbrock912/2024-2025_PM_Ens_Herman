@@ -7,7 +7,12 @@ bool comparator (int a, int b) {
     return a > b;
 }
 
-List::List() : head(nullptr) {}
+List::List() {
+        head = new list();
+        tail = new list();
+        head->next = tail;
+        tail->prev = head;
+}
 
 List::~List () {
     list* current = head;
@@ -25,30 +30,32 @@ void List::insert (int index, int value) {
     list* New = new list(value);
 
     if (index == 0) {
-        New->next = head;
-        head = New;
+        New->next = head->next;
+        New->prev = head;
+        head->next = New;
         return;
     }
 
-    list* current = head;
+    list* current = head->next;
 
-    for (int i = 0; i < index - 1 && current != nullptr; i++) {
+    for (int i = 0; i < index - 1 && current != tail; i++) {
         current = current->next;
     }
 
-    if (current == nullptr) {
+    if (current == tail) {
         delete New; 
         return;
     }
     
     New->next = current->next;
+    New->prev = current;
     current->next = New;
 }
 
 void List::print () {
-    list* current = head;
+    list* current = head->next;
 
-    while (current != nullptr) {
+    while (current != tail) {
         cout << current->data << " " ;
         current = current->next;
     }
@@ -56,27 +63,22 @@ void List::print () {
 }
 
 void List::pop (int index) {
-    if (index < 0 || head == nullptr)
+    if (index < 0)
         return;
 
-    if (index == 0) {
-        list* tmp = head;
-        head = head->next;
-        delete tmp;
-        return;
-    }
 
-    list* current = head;
+    list* current = head->next;
 
-    for (int i = 0; i < index - 1 && current != nullptr; i++) {
+    for (int i = 0; i < index && current != tail; i++) {
         current = current->next;
     }
 
-    if (current == nullptr || current->next == nullptr) 
+    if (current == tail) 
         return;
 
-    list* tmp = current->next;
-    current->next = current->next->next;
+    list* tmp = current;
+    current->next->prev = current->prev;
+    current->prev->next = current->next;
     delete tmp;
 }
 
@@ -85,8 +87,8 @@ void List::sort (bool compare(int a, int b)) {
     
     while (count != 0) {
         count = 0;
-        list* current = head;
-        while (current->next != nullptr) {
+        list* current = head->next;
+        while (current->next != tail) {
             if (compare(current->data, current->next->data)) {
                 int tmp = current->data;
                 current->data = current->next->data;
@@ -99,6 +101,9 @@ void List::sort (bool compare(int a, int b)) {
 }
 
 list* List::getHead() const {
-        return head;
-    }
+    return head;
+}
 
+list* List::getTail() const {
+    return tail;
+}

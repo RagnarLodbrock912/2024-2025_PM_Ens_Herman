@@ -6,13 +6,15 @@ bool comparator (int a, int b);
 struct list {
     int data;
     list* next;
+    list* prev;
 
-    list(int value): data(value), next(nullptr) {}
+    list(int value = 0): data(value), prev(nullptr), next(nullptr) {}
 };
 
 class List {
 private:
     list* head;
+    list* tail;
 public:
     List();
     ~List();
@@ -22,6 +24,7 @@ public:
     void pop (int index);
     void sort (bool compare(int a, int b) = comparator);
     list* getHead() const;
+    list* getTail() const;
 };
 
 #endif
