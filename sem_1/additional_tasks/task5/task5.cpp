@@ -29,7 +29,7 @@ int main ()
     } else if (r1 - r2 >= d) {
         cout << square(r1) << endl;
     } else if (d < r1) {
-        // fuck you
+
         float O2B = r1 - d;
         float x = (r1 * r1 - r2 * r2 - d * d) / (2 * d);
 
@@ -46,7 +46,6 @@ int main ()
 
         cout << square(r1) + square(r2) - S1 - S2;      
     } else {
-        // it is pizdec
         float O2B = d - r1;
         float O1A = d - r2;
         float AB = d - O1A - O2B;

@@ -4,18 +4,6 @@
 
 using namespace std;
 
-bool isPrime (int n) {
-    if (n < 2) {
-        return false;  
-    }
-    for (int i = 2; i <= sqrt(n); i++) {
-        if ((n % i) == 0) {
-            return false;
-        }
-    }
-    return true;
-}
-
 bool threeOddNum (int n) {
     int i = 0;
     for (; i < 3 && n > 0; i++) {
@@ -59,7 +47,7 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> a;
         if(!flag) {
-            if(isPrime(a) && threeOddNum(a))
+            if(threeOddNum(a))
                 flag = true;
         }
         arr.insert(i, a);
@@ -71,7 +59,7 @@ int main() {
         list* current = arr.getHead();
         int i = 0;
         while (current != nullptr) {
-            if (hasDigit8(current->data)) {
+            if (!hasDigit8(current->data)) {
                 arr.pop(i);
                 i--;
             } else {
