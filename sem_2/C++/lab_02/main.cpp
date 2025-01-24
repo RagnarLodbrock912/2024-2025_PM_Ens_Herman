@@ -85,7 +85,7 @@ vector<string> cellsToGo (string coord, int m, int n, vector<string> visit, vect
             res.push_back(S);
         }
     }
-    if (i - 1 >= 0 && j + 1 >= 0) {
+    if (i - 1 >= 0 && j + 1 < n) {
         string S = "" + to_string(i - 1) + ":" + to_string(j + 1);
         if (find(visit.begin(), visit.end(), S) == visit.end() && field[i - 1][j + 1] != '#') {
             res.push_back(S);
@@ -98,9 +98,6 @@ vector<string> cellsToGo (string coord, int m, int n, vector<string> visit, vect
 
 
 int main() {
-    // cout << isPrime(55);
-
-    
     ifstream in("../input.txt");
     
     if (!in) {
@@ -121,7 +118,7 @@ int main() {
     field.erase(field.begin());
 
     vector<string> cells, res, visit;
-    int count, answ = 0;
+    int count = 0, answ = 0;
 
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
@@ -146,7 +143,8 @@ int main() {
 
             visit.push_back(cells[0]);
 
-            vector<string> rres = cellsToGo(cells[0], m, n, visit, field);
+            vector<string> rres;
+            rres =  cellsToGo(cells[0], m, n, visit, field);
 
             res.insert(res.end(), rres.begin(), rres.end());
 
