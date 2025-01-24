@@ -205,6 +205,33 @@ void heapSort(vector<int>& arr)
         siftDown(arr, 0, heapSize);
     }
 }
+void heapify(std::vector<int> &mas, int n, int i)
+{
+    int largest = i;   
+    int l = 2*i + 1;
+    int r = 2*i + 2;
+    if (l < n && mas[l] > mas[largest])
+        largest = l;
+    if (r < n && mas[r] > mas[largest])
+        largest = r;
+    if (largest != i)
+    {
+        std::swap(mas[i], mas[largest]);
+        heapify(mas, n, largest);
+    }
+}
+
+void heap_sort(std::vector<int> &mas)
+{
+    int n = mas.size();
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(mas, n, i);
+    for (int i=n-1; i>=0; i--)
+    {
+        std::swap(mas[0], mas[i]);
+        heapify(mas, i, 0);
+    }
+}
 int main () 
 {
     ifstream in("input.txt");
@@ -222,7 +249,7 @@ int main ()
     for (int i = 0; i < n; i++)
         in >> mas[i];
 
-    bubleSort(mas);
+    heap_sort(mas);
 
     for (int i = 0; i < n; i++)
         out << mas[i] << " ";

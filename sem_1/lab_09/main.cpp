@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
     long long n = 1234567890;
-    long long *ptr = &n;
+    long long* ptr = &n;
 
     unsigned char* bytePtr = reinterpret_cast<unsigned char*>(ptr);
 
