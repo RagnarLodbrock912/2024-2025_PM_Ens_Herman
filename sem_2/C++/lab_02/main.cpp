@@ -23,11 +23,6 @@ bool isPrime(int n, int i = 2) {
     }
 }
 
-// struct cells {
-//     vector<int> resI;
-//     vector<int> resJ;
-// };
-
 int getI (string coord) {
     return stoi(coord.substr(0, coord.find(":")));
 }
