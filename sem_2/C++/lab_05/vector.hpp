@@ -5,11 +5,6 @@
 
 using namespace std;
 
-int nextPowerOfTwo(int n) {
-    if (n <= 0) return 1; 
-    return pow(2, ceil(log2(n)));
-}
-
 template <typename vec>
 class Vector
 {
@@ -17,6 +12,11 @@ private:
     vec* arr;
     size_t len;
     size_t cap;
+
+    int nextPowerOfTwo(int n) {
+        if (n <= 0) return 1; 
+        return pow(2, ceil(log2(n)));
+    }
 public:
     Vector() : arr(nullptr), len(0) {}
 
@@ -48,7 +48,8 @@ public:
     }
     
     ~Vector() {
-        delete [] arr;
+        if (arr != nullptr)
+            delete [] arr;
     }
 
     Vector& resize(size_t n) {
@@ -64,7 +65,8 @@ public:
             newArr[i] = arr[i];
         }
 
-        delete [] arr;
+        if (arr != nullptr)
+            delete [] arr;
 
         len = n;
         cap = nextPowerOfTwo(n);
@@ -82,7 +84,8 @@ public:
             newArr[i] = arr[i];
         }
 
-        delete [] arr;
+        if (arr != nullptr)
+            delete [] arr;
 
         len = minLen;
         cap = n;
@@ -98,7 +101,8 @@ public:
             newArr[i] = arr[i];
         }
 
-        delete [] arr;
+        if (arr != nullptr)
+            delete [] arr;
 
         cap = len;
         arr = newArr;
@@ -177,16 +181,15 @@ public:
     }
 
     Vector& operator=(const Vector& other) {
-        if (this != &other) {
-            delete[] arr;
-            len = other.len;
-            arr = new vec[len];
-            for (int i = 0; i < len; i++) {
-                arr[i] = other.arr[i];
-            }
+        if (this == &other) return *this;
+        if (arr != nullptr)
+            delete [] arr;
+        len = other.len;
+        arr = new vec[len];
+        for (int i = 0; i < len; i++) {
+            arr[i] = other.arr[i];
         }
-        return *this;
-    }
+}
 
     friend ostream& operator<<(ostream& out, const Vector& array) {
         for (int i = 0; i < array.len; i++) {
