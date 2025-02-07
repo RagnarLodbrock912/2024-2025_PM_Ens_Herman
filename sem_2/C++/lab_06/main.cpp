@@ -16,7 +16,7 @@ private:
     size_t n;
 
     Matrix<T> minor (int row, int col) {
-        Matrix<T> res(n - 1, m - 1, 0);
+        Matrix<T> res(m - 1, n - 1, 0);
         size_t m_count = 0;
         size_t n_count = 0;
         for (int i = 0; i < m; i++) {
@@ -60,15 +60,12 @@ public:
         if (m == 2) {
             return matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
         }
+    
         T res = T();
-
-        for (int i = 0; i < m; i++) {
-            res += pow(-1, i) * matrix[0][i] * this->minor(0, i).det();
+        for (size_t i = 0; i < m; i++) {
+            res += ((i % 2 == 0) ? 1 : -1) * matrix[0][i] * this->minor(0, i).det();
         }
-
         return res;
-
-        
     }
 
     Vector<T>& operator[](size_t i) {
@@ -76,8 +73,7 @@ public:
     }
 
     Matrix& operator=(const Matrix& other) {
-        if (this == &other)
-            return *this;
+        if (this == &other) return *this;
 
         matrix = other.matrix;
         m = other.m;
@@ -96,8 +92,8 @@ public:
     }
 
     Matrix operator+(const Matrix& other) const {
-    if (m != other.m && n != other.n) {
-        throw out_of_range("Different dimentions");
+    if (m != other.m || n != other.n) {
+        throw out_of_range("Different dimensions");
     }   
     Matrix<T> res(m, n);
     for (int i = 0; i < m; i++) {
@@ -115,7 +111,7 @@ public:
 
     Matrix operator*(const Matrix& other) const {
         if (n != other.m) {
-            throw out_of_range("Incorrect dimentions");
+            throw out_of_range("Incorrect dimensions");
         }   
         Matrix<T> res(m, other.n);
 

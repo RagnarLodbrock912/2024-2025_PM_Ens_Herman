@@ -18,14 +18,14 @@ private:
         return pow(2, ceil(log2(n)));
     }
 public:
-    Vector() : arr(nullptr), len(0) {}
+    Vector() : arr(nullptr), len(0), cap(0) {}
 
     Vector(int n, vec val = vec()) {
         len = n;
         cap = nextPowerOfTwo(n);
         arr = new vec[cap];
 
-        for (int i = 0; i < len; i++) {
+        for (size_t i = 0; i < len; i++) {
             arr[i] = val;
         }
     }
@@ -34,22 +34,21 @@ public:
         len = other.len;
         cap = other.cap;
         arr = new vec[cap];
-        for (int i = 0; i < len; i++) {
+        for (size_t i = 0; i < len; i++) {
             arr[i] = other.arr[i];
         }
     }
 
-    size_t size() {
+    size_t size() const {
         return len;
     }
 
-    size_t capacity() {
+    size_t capacity() const {
         return cap;
     }
-    
+
     ~Vector() {
-        if (arr != nullptr)
-            delete [] arr;
+        delete[] arr;
     }
 
     Vector& resize(size_t n) {
@@ -61,99 +60,88 @@ public:
         vec* newArr = new vec[nextPowerOfTwo(n)];
         size_t minLen = min(len, n);
 
-        for (int i = 0; i < minLen; i++) {
+        for (size_t i = 0; i < minLen; i++) {
             newArr[i] = arr[i];
         }
 
-        if (arr != nullptr)
-            delete [] arr;
-
+        delete[] arr;
+        arr = newArr;
         len = n;
         cap = nextPowerOfTwo(n);
-        arr = newArr;
         return *this;
     }
 
     Vector& reserve(size_t n) {
         if (n <= cap) return *this;
 
-        vec* newArr = new vec[n];
+        vec* newArr = new vec[nextPowerOfTwo(n)];
         size_t minLen = min(len, n);
 
-        for (int i = 0; i < minLen; i++) {
+        for (size_t i = 0; i < minLen; i++) {
             newArr[i] = arr[i];
         }
 
-        if (arr != nullptr)
-            delete [] arr;
-
-        len = minLen;
-        cap = n;
+        delete[] arr;
         arr = newArr;
+        len = minLen;
+        cap = nextPowerOfTwo(n);
         return *this;
     }
 
     Vector& shrink_to_fit() {
         if (len == cap) return *this;
-        vec* newArr = new vec[len];
 
-        for (int i = 0; i < len; i++) {
+        vec* newArr = new vec[len];
+        for (size_t i = 0; i < len; i++) {
             newArr[i] = arr[i];
         }
 
-        if (arr != nullptr)
-            delete [] arr;
-
-        cap = len;
+        delete[] arr;
         arr = newArr;
+        cap = len;
         return *this;
     }
 
-
     Vector& reverse() {
-        for (int i = 0; i < len / 2; i++) {
-            vec tmp = arr[i];
-            arr[i] = arr[len - 1 - i];
-            arr[len - 1 - i] = tmp;
+        for (size_t i = 0; i < len / 2; i++) {
+            swap(arr[i], arr[len - 1 - i]);
         }
         return *this;
     }
 
     vec* front() {
-        return &arr[0];
+        return len > 0 ? &arr[0] : nullptr;
     }
 
     vec* back() {
-        return &arr[len - 1];
+        return len > 0 ? &arr[len - 1] : nullptr;
     }
 
     vec* begin() {
-        return &arr[0];
+        return len > 0 ? &arr[0] : nullptr;
     }
 
     vec* end() {
-        return &arr[len];
+        return len > 0 ? &arr[len] : nullptr;
     }
 
-    bool empty() {
-        if (len == 0) return true;
-        return false;
+    bool empty() const {
+        return len == 0;
     }
 
-
-    Vector& push_back(vec el) {
-        if (len + 1 > cap) this->reserve(len + 1);
-        arr[len] = el;
-        len++;
+    Vector& push_back(const vec& el) {
+        if (len + 1 > cap) this->reserve(nextPowerOfTwo(len + 1));
+        arr[len++] = el;
         return *this;
     }
 
-    Vector& insert(size_t index, vec el) {
-        if (index < 0 || index >= len + 1) {
+    Vector& insert(size_t index, const vec& el) {
+        if (index > len) {
             throw out_of_range("Index out of range");
         }
-        if (len + 1 > cap) this->reserve(len + 1);
-        for (int i = len; i > index; i--) {
+        if (len + 1 > cap) this->reserve(nextPowerOfTwo(len + 1));
+        
+        for (size_t i = len; i > index; i--) {
             arr[i] = arr[i - 1];
         }
         arr[index] = el;
@@ -162,19 +150,25 @@ public:
     }
 
     Vector& erase(size_t index) {
-        if (index < 0 || index >= len) {
+        if (index >= len) {
             throw out_of_range("Index out of range");
         }
-        for (int i = index; i < len; i++) {
+        for (size_t i = index; i < len - 1; i++) {
             arr[i] = arr[i + 1];
         }
-        len = len - 1;
+        len--;
         return *this;
-
     }
 
     vec& operator[](size_t i) {
-        if (i < 0 || i >= len) {
+        if (i >= len) {
+            throw out_of_range("Index out of range");
+        }
+        return arr[i];
+    }
+
+    const vec& operator[](size_t i) const {
+        if (i >= len) {
             throw out_of_range("Index out of range");
         }
         return arr[i];
@@ -182,17 +176,22 @@ public:
 
     Vector& operator=(const Vector& other) {
         if (this == &other) return *this;
-        if (arr != nullptr)
-            delete [] arr;
+
+        delete[] arr;
+
         len = other.len;
-        arr = new vec[len];
-        for (int i = 0; i < len; i++) {
+        cap = other.cap;
+        arr = new vec[cap];
+
+        for (size_t i = 0; i < len; i++) {
             arr[i] = other.arr[i];
         }
-}
+
+        return *this;
+    }
 
     friend ostream& operator<<(ostream& out, const Vector& array) {
-        for (int i = 0; i < array.len; i++) {
+        for (size_t i = 0; i < array.len; i++) {
             out << array.arr[i] << " ";
         }
         return out;
