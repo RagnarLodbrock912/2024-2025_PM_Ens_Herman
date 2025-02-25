@@ -82,36 +82,36 @@ int main() {
     v.push_back(false);
     v.push_back(true);
 
-    std::cout << "Size: " << v.size() << std::endl;
+    cout << "Size: " << v.size() << endl;
 
     for (size_t i = 0; i < v.size(); ++i) {
-        std::cout << v[i] << " ";
+        cout << v[i] << " ";
     }
-    std::cout << std::endl;
+    cout << endl;
 
     v.set(2, false);
 
-    std::cout << "After changing index 2 to false: ";
+    cout << "After changing index 2 to false: ";
     for (size_t i = 0; i < v.size(); ++i) {
-        std::cout << v[i] << " ";
+        cout << v[i] << " ";
     }
-    std::cout << std::endl;
+    cout << endl;
 
     v.insert(2, true);
 
-    std::cout << "After inserting true at index 2: ";
+    cout << "After inserting true at index 2: ";
     for (size_t i = 0; i < v.size(); ++i) {
-        std::cout << v[i] << " ";
+        cout << v[i] << " ";
     }
-    std::cout << std::endl;
+    cout << endl;
 
     v.erase(1);
 
-    std::cout << "After erasing index 1: ";
+    cout << "After erasing index 1: ";
     for (size_t i = 0; i < v.size(); ++i) {
-        std::cout << v[i] << " ";
+        cout << v[i] << " ";
     }
-    std::cout << std::endl;
+    cout << endl;
 
     return 0;
 }

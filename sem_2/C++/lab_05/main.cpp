@@ -5,6 +5,7 @@ using namespace std;
 
 int main() {
     Vector<int> vec1(5, 10);
+    Vector<int> arr = vec1;
     cout << "Initial vector (size 5, value 10): " << vec1 << endl;
 
     vec1.push_back(20);
