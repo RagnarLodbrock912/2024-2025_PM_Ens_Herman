@@ -1,21 +1,11 @@
-n = int(input())
+arr = list(map(int, input().split()))
+arr2 = list(map(int, input().split()))
 
-arr = []
-
-for i in range(n):
-    a = int(input())
-    arr.append(a)
-
-m = int(input())
-
-arr2 = []
 count = 0
 
-for i in range(m):
-    a = int(input())
-    if a in arr:
+for i in range(len(arr)):
+    if arr[i] in arr2:
         count += 1
-    arr2.append(a)
 
 print(count)
 

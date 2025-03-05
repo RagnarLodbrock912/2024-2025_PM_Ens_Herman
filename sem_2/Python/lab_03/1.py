@@ -1,22 +1,18 @@
-n = int(input())
 max_ind = 0
 min_ind = 0
 max = float('-inf')
 min = float('inf')
-arr = []
+arr = list(map(int, input().split()))
 
-for i in range(n):
-    a = int(input())
-    if a > max:
-        max = a
+for i in range(len(arr)):
+    if arr[i] > max:
+        max = arr[i]
         max_ind = i
-    if a < min:
-        min = a
+    if arr[i] < min:
+        min = arr[i]
         min_ind = i
-    arr.append(a)
 
-tmp = arr[max_ind]
-arr[max_ind] = arr[min_ind]
-arr[min_ind] = tmp
+arr[max_ind] = min
+arr[min_ind] = max
 
 print(arr)
