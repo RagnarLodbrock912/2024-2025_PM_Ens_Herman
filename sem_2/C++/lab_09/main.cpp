@@ -41,6 +41,11 @@ int main()
     scoreText.setFillColor(sf::Color::White);
     scoreText.setPosition(sf::Vector2f(10.f, 10.f));
     
+    sf::Text finishText(font, "YOUR SCORE: " + std::to_string(score) + "\n TO RESTART PRESS X");
+    finishText.setCharacterSize(24);
+    finishText.setFillColor(sf::Color::Red);
+    finishText.setPosition(sf::Vector2f(widowHeigth / 2, 10.f));
+
     float tankPosX = 100.f, tankPosY = 100.f;
     
     sf::ConvexShape tankShape;
@@ -75,6 +80,8 @@ int main()
     float tankV = 360.f;
     float bulletV = 500.f;
     float enemyV = 50.f;
+
+    bool isLose =  false;
     
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -94,19 +101,19 @@ int main()
             enemy.setFillColor(sf::Color::Yellow);
             enemies.push_back(enemy);
         }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+    
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Joystick::isButtonPressed(0, 5))
         {
             if (tankShape.getPosition().x <= windowWidth - tankWidth)
                 tankShape.move({tankV * dt, 0.f});
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Joystick::isButtonPressed(0, 4))
         {
             if (tankShape.getPosition().x >= 0)
                 tankShape.move({-(tankV * dt), 0.f});
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) || sf::Joystick::isButtonPressed(0, 0)) {
             if (bulletTimer.getElapsedTime().asSeconds() >= 0.5f) {
                     bulletTimer.restart();
                     sf::CircleShape bullet(muzzleWidth / 2);
@@ -117,6 +124,19 @@ int main()
                 }
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R) || sf::Joystick::isButtonPressed(0, 2))
+        {
+            if (isLose) {
+                isLose = false;
+                score = 0;
+                scoreText.setString("SCORE: " + std::to_string(score));
+                bullets.clear();
+                enemies.clear();
+                tankShape.setPosition(sf::Vector2f(0, widowHeigth - (muzzleHeigth + tankHeigth)));
+            }
+        }
+
+
         for (int i = 0; i < bullets.size(); i++) {
             bullets[i].move(sf::Vector2f(0.f, -(bulletV * dt)));
         }
@@ -124,8 +144,7 @@ int main()
         for (int i = 0; i < enemies.size(); i++) {
             enemies[i].move(sf::Vector2f(0.f, enemyV * dt));
             if (enemies[i].getPosition().y >= (widowHeigth - tankHeigth - muzzleHeigth - muzzleWidth * 0.75)) {
-                window.close();
-                std::cout << "Your score: " << score << std::endl;
+                isLose = true;
             }
         }
 
@@ -154,15 +173,21 @@ int main()
 
 
         window.clear();
-        window.draw(tankShape);
-        window.draw(scoreText);
-        window.draw(line);
-        for (int i = 0; i < bullets.size(); i++) {
-            window.draw(bullets[i]);
+        if(!isLose) {
+            window.draw(tankShape);
+            window.draw(scoreText);
+            window.draw(line);
+            for (int i = 0; i < bullets.size(); i++) {
+                window.draw(bullets[i]);
+            }
+            for (int i = 0; i < enemies.size(); i++) {
+                window.draw(enemies[i]);
+            }
+        } else {
+            finishText.setString("YOUR SCORE: " + std::to_string(score) + "\n TO RESTART PRESS X");
+            window.draw(finishText);
         }
-        for (int i = 0; i < enemies.size(); i++) {
-            window.draw(enemies[i]);
-        }
+
         window.display();
     }
 }

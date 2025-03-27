@@ -1,0 +1,42 @@
+{
+    "invoices": [
+        {
+            "id": 1,
+            "total": 100.0,
+            "items": [
+                {
+                    "name": "item 1",
+                    "quantity": 2,
+                    "price": 50.0
+                },
+                {
+                    "name": "item 2",
+                    "quantity": 1,
+                    "price": 50.0
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "total": 200.0,
+            "items": [
+                {
+                    "name": "item 3",
+                    "quantity": 1,
+                    "price": 200.0
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "total": 150.0,
+            "items": [
+                {
+                    "name": "item 4",
+                    "quantity": 3,
+                    "price": 50.0
+                }
+            ]
+        }
+    ]
+}
