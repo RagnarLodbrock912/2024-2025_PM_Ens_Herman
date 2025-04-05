@@ -1,0 +1,4 @@
+userId,jobTitle,firstName,lastName,employeeCode,region,phoneNumber,emailAddress
+carol,Project Manager,Carol,Davis,E6,WA,5555555,carol.davis@learningcontainer.com
+dave,UX Designer,Dave,Wilson,E7,FL,6666666,dave.wilson@learningcontainer.com
+grace,Business Analyst,Grace,Anderson,E10,GA,9999999,grace.anderson@learningcontainer.com

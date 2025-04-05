@@ -14,7 +14,8 @@ namespace mt
 		file >> m_size;
 	
 		for (int i = 0; i < m_size; i++) {
-			file >> m_points[i].x >> m_points[i].y >> m_points[i].z >> m_colors[i].r >> m_colors[i].g >> m_colors[i].b >> m_colors[i].a;
+			file >> m_points[i].x >> m_points[i].y >> m_points[i].z 
+			>> m_colors[i].r >> m_colors[i].g >> m_colors[i].b >> m_colors[i].a;
 		}
 	
 		file.close();
@@ -94,7 +95,12 @@ namespace mt
 			}
 
 			for (int i = 0; i < m_size; i++)
-					m_camera->ProjectPoint(m_points[i], {(uint8_t)(m_colors[i].r), (uint8_t)(m_colors[i].g), (uint8_t)(m_colors[i].b), (uint8_t)(m_colors[i].a)});
+					m_camera->ProjectPoint(m_points[i], 
+						{(uint8_t)(m_colors[i].r), 
+						(uint8_t)(m_colors[i].g), 
+						(uint8_t)(m_colors[i].b), 
+						(uint8_t)(m_colors[i].a)}
+					);
 
 			m_texture->update((uint8_t*)m_camera->Picture(), 1920, 1080, 0, 0);
 			m_camera->Clear();

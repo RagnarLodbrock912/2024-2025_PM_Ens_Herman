@@ -1,0 +1,10 @@
+userId,jobTitle,firstName,lastName,employeeCode,region,phoneNumber,emailAddress
+devid,Developer,Devid,Rome,E2,CA,1111111,devid.rome@learningcontainer.com
+tin,Program Directory,Tin,Jonson,E3,CA,2222222,tin.jonson@learningcontainer.com
+alice,Software Engineer,Alice,Smith,E4,NY,3333333,alice.smith@learningcontainer.com
+bob,Data Scientist,Bob,Brown,E5,TX,4444444,bob.brown@learningcontainer.com
+carol,Project Manager,Carol,Davis,E6,WA,5555555,carol.davis@learningcontainer.com
+dave,UX Designer,Dave,Wilson,E7,FL,6666666,dave.wilson@learningcontainer.com
+eva,HR Manager,Eva,Moore,E8,IL,7777777,eva.moore@learningcontainer.com
+frank,DevOps Engineer,Frank,Taylor,E9,CO,8888888,frank.taylor@learningcontainer.com
+grace,Business Analyst,Grace,Anderson,E10,GA,9999999,grace.anderson@learningcontainer.com
