@@ -1,8 +1,11 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <random>
 #include <cmath>
+#include <thread>
+#include <chrono>
 
 int getRandomNumber(int min, int max) {
     std::random_device rd;
@@ -17,20 +20,20 @@ float calculateDistance(float x1, float y1, float x2, float y2) {
 
 int main()
 {
-    const unsigned int windowWidth = 900u,
-                       widowHeigth = 600u;
+    const unsigned int windowWidth = 1800u,
+                       widowHeigth = 930u;
     
 
     auto window = sf::RenderWindow(sf::VideoMode({windowWidth, widowHeigth}), "SFML", sf::Style::Titlebar | sf::Style::Close);
  
-    const unsigned int tankWidth = 80u,
-                       tankHeigth = 80u,
-                       muzzleWidth = 20u,
+    const unsigned int tankWidth = 180u,
+                       tankHeigth = 180u,
+                       muzzleWidth = 50u,
                        muzzleHeigth = 50u;
 
     const unsigned int MD = (tankWidth - muzzleWidth) / 2;
     sf::Font font;
-    if (!font.openFromFile("C:/Windows/Fonts/arial.ttf")) {
+    if (!font.openFromFile("../../lib/textures/press-start-k.ttf")) {
         std::cerr << "font error\n";
         return -1;
     }
@@ -41,47 +44,125 @@ int main()
     scoreText.setFillColor(sf::Color::White);
     scoreText.setPosition(sf::Vector2f(10.f, 10.f));
     
-    sf::Text finishText(font, "YOUR SCORE: " + std::to_string(score) + "\n TO RESTART PRESS X");
-    finishText.setCharacterSize(24);
+    sf::Text finishText(font, "        YOUR SCORE: " + std::to_string(score) + "\nTO RESTART PRESS X");
+    finishText.setCharacterSize(56);
     finishText.setFillColor(sf::Color::Red);
-    finishText.setPosition(sf::Vector2f(widowHeigth / 2, 10.f));
+    
+    finishText.setPosition(sf::Vector2f(
+        window.getSize().x * 0.25,
+        window.getSize().y * 0.3
+    ));
 
     float tankPosX = 100.f, tankPosY = 100.f;
     
-    sf::ConvexShape tankShape;
-    tankShape.setPointCount(8);
+    // sf::ConvexShape tankSprite;
+    // tankSprite.setPointCount(8);
 
-    unsigned int pointIndex = 0;
+    // unsigned int pointIndex = 0;
     
-    tankShape.setPoint(pointIndex++, sf::Vector2f(0, muzzleHeigth));
-    tankShape.setPoint(pointIndex++, sf::Vector2f(0, muzzleHeigth + tankHeigth));
-    tankShape.setPoint(pointIndex++, sf::Vector2f(tankWidth, muzzleHeigth + tankHeigth));
-    tankShape.setPoint(pointIndex++, sf::Vector2f(tankWidth, muzzleHeigth));
-    tankShape.setPoint(pointIndex++, sf::Vector2f(MD + muzzleWidth, muzzleHeigth));
-    tankShape.setPoint(pointIndex++, sf::Vector2f(MD + muzzleWidth, 0));
-    tankShape.setPoint(pointIndex++, sf::Vector2f(MD, 0));
-    tankShape.setPoint(pointIndex++, sf::Vector2f(MD, muzzleHeigth));
+    // tankSprite.setPoint(pointIndex++, sf::Vector2f(0, muzzleHeigth));
+    // tankSprite.setPoint(pointIndex++, sf::Vector2f(0, muzzleHeigth + tankHeigth));
+    // tankSprite.setPoint(pointIndex++, sf::Vector2f(tankWidth, muzzleHeigth + tankHeigth));
+    // tankSprite.setPoint(pointIndex++, sf::Vector2f(tankWidth, muzzleHeigth));
+    // tankSprite.setPoint(pointIndex++, sf::Vector2f(MD + muzzleWidth, muzzleHeigth));
+    // tankSprite.setPoint(pointIndex++, sf::Vector2f(MD + muzzleWidth, 0));
+    // tankSprite.setPoint(pointIndex++, sf::Vector2f(MD, 0));
+    // tankSprite.setPoint(pointIndex++, sf::Vector2f(MD, muzzleHeigth));
 
-    tankShape.setFillColor(sf::Color::Green);
+    // tankSprite.setFillColor(sf::Color::Green);
 
-    tankShape.setPosition(sf::Vector2f(0, widowHeigth - (muzzleHeigth + tankHeigth)));
+    // tankSprite.setPosition(sf::Vector2f(0, widowHeigth - (muzzleHeigth + tankHeigth)));
 
-    sf::RectangleShape line(sf::Vector2f(windowWidth, 3.f));
-    line.setPosition(sf::Vector2f(0.f, widowHeigth - tankHeigth - muzzleHeigth -  5.f));
-    line.setFillColor(sf::Color::Blue);
+    sf::Texture tankTexture;
+    if (!tankTexture.loadFromFile("../../lib/textures/Picsart_25-04-12_04-11-00-808.png")) {
+        return -1;
+    }
 
-    std::vector<sf::CircleShape> bullets;
-    std::vector<sf::CircleShape> enemies;
+    sf::Sprite tankSprite(tankTexture);
+    tankSprite.setTexture(tankTexture);
+
+    tankSprite.setScale(sf::Vector2f(
+        tankWidth / static_cast<float>(tankTexture.getSize().x),
+        tankHeigth / static_cast<float>(tankTexture.getSize().y)
+    ));
+
+    tankSprite.setPosition(sf::Vector2f(0, widowHeigth - (muzzleHeigth + tankHeigth)));
+
+
+    // sf::RectangleShape line(sf::Vector2f(windowWidth, 3.f));
+    // line.setPosition(sf::Vector2f(0.f, widowHeigth - tankHeigth - muzzleHeigth -  5.f));
+    // line.setFillColor(sf::Color::Blue);
+
+
+    sf::Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("../../lib/textures/Picsart_25-04-12_05-01-29-179.png")) {
+        return -1;
+    }
+
+    sf::Sprite backgroundSprite(backgroundTexture);
+    backgroundSprite.setTexture(backgroundTexture);
+
+    backgroundSprite.setScale(sf::Vector2f(
+        windowWidth / static_cast<float>(backgroundTexture.getSize().x),
+        widowHeigth / static_cast<float>(backgroundTexture.getSize().y)
+    ));
+
+
+    sf::Texture enemyTexture;
+    if (!enemyTexture.loadFromFile("../../lib/textures/Picsart_25-04-12_05-08-30-636.png")) {
+        return -1;
+    }
+
+    sf::Texture bulletTexture;
+    if (!bulletTexture.loadFromFile("../../lib/textures/Picsart_25-04-12_05-18-42-973.png")) {
+        return -1;
+    }
+
+
+    sf::SoundBuffer shoutBuffer;
+
+    if (!shoutBuffer.loadFromFile("../../lib/sounds/battle-city-sfx-6.mp3"))
+    {
+        return -1;
+    }
+
+    sf::Sound shout(shoutBuffer);
+    shout.setBuffer(shoutBuffer);
+
+    sf::SoundBuffer deathBuffer;
+
+    if (!deathBuffer.loadFromFile("../../lib/sounds/12.mp3"))
+    {
+        return -1;
+    }
+
+    sf::Sound death(deathBuffer);
+    death.setBuffer(deathBuffer);
+
+
+    sf::SoundBuffer loseBuffer;
+
+    if (!loseBuffer.loadFromFile("../../lib/sounds/b1314089d5efb25.mp3"))
+    {
+        return -1;
+    }
+
+    sf::Sound lose(loseBuffer);
+    lose.setBuffer(loseBuffer);
+
+    std::vector<sf::Sprite> bullets;
+    std::vector<sf::Sprite> enemies;
 
     sf::Clock clock;
     sf::Clock bulletTimer;
     sf::Clock enemyTimer;
     
-    float tankV = 360.f;
+    float tankV = 480.f;
     float bulletV = 500.f;
     float enemyV = 50.f;
 
     bool isLose =  false;
+    bool loseSound = true;
     
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -93,46 +174,80 @@ int main()
         float dt = clock.getElapsedTime().asSeconds();
         clock.restart();
 
-        if (enemyTimer.getElapsedTime().asSeconds() >= 1.f) {
-            enemyTimer.restart();
-            sf::CircleShape enemy(muzzleWidth * 0.75);
-            enemy.setOrigin(sf::Vector2f(muzzleWidth * 0.75, muzzleWidth * 0.75));
-            enemy.setPosition(sf::Vector2f((float)getRandomNumber(MD, (int)(windowWidth - muzzleWidth * 0.75 - MD)), 0.f));
-            enemy.setFillColor(sf::Color::Yellow);
-            enemies.push_back(enemy);
+        if (!isLose) {
+            if (enemyTimer.getElapsedTime().asSeconds() >= 1.5) {
+                enemyTimer.restart();
+                // sf::CircleShape enemy(muzzleWidth * 0.75);
+                // enemy.setOrigin(sf::Vector2f(muzzleWidth * 0.75, muzzleWidth * 0.75));
+                // enemy.setPosition(sf::Vector2f((float)getRandomNumber(MD, (int)(windowWidth - muzzleWidth * 0.75 - MD)), 0.f));
+                // enemy.setFillColor(sf::Color::Yellow);
+
+                sf::Sprite enemySprite(enemyTexture);
+                enemySprite.setTexture(enemyTexture);
+
+                enemySprite.setScale(sf::Vector2f(
+                    muzzleWidth * 0.75 / static_cast<float>(tankTexture.getSize().x),
+                    muzzleWidth * 0.75 / static_cast<float>(tankTexture.getSize().y)
+                ));
+
+                enemySprite.setPosition(sf::Vector2f((float)getRandomNumber(MD, (int)(windowWidth - muzzleWidth * 0.75 - MD)), 0.f));
+
+                enemies.push_back(enemySprite);
+            }
         }
     
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Joystick::isButtonPressed(0, 5))
         {
-            if (tankShape.getPosition().x <= windowWidth - tankWidth)
-                tankShape.move({tankV * dt, 0.f});
+            if (!isLose) {
+                if (tankSprite.getPosition().x <= windowWidth - tankWidth)
+                    tankSprite.move({tankV * dt, 0.f});
+            }
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Joystick::isButtonPressed(0, 4))
         {
-            if (tankShape.getPosition().x >= 0)
-                tankShape.move({-(tankV * dt), 0.f});
+            if (!isLose) {
+                if (tankSprite.getPosition().x >= 0)
+                    tankSprite.move({-(tankV * dt), 0.f});
+            }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) || sf::Joystick::isButtonPressed(0, 0)) {
-            if (bulletTimer.getElapsedTime().asSeconds() >= 0.5f) {
-                    bulletTimer.restart();
-                    sf::CircleShape bullet(muzzleWidth / 2);
-                    bullet.setOrigin(sf::Vector2f(muzzleWidth / 2, muzzleWidth / 2));
-                    bullet.setPosition(sf::Vector2f(tankShape.getPosition().x + muzzleWidth / 2 + MD, tankShape.getPosition().y));
-                    bullet.setFillColor(sf::Color::Red);
-                    bullets.push_back(bullet);
-                }
+            if (!isLose) {
+                if (bulletTimer.getElapsedTime().asSeconds() >= 0.5f) {
+                        bulletTimer.restart();
+                        // sf::CircleShape bullet(muzzleWidth / 2);
+                        // bullet.setOrigin(sf::Vector2f(muzzleWidth / 2, muzzleWidth / 2));
+                        // bullet.setPosition(sf::Vector2f(tankSprite.getPosition().x + muzzleWidth / 2 + MD, tankSprite.getPosition().y));
+                        // bullet.setFillColor(sf::Color::Red);
+
+                        shout.play();
+
+                        sf::Sprite bulletSprite(bulletTexture);
+                        bulletSprite.setTexture(bulletTexture);
+            
+                        bulletSprite.setScale(sf::Vector2f(
+                            muzzleWidth / 2 / static_cast<float>(tankTexture.getSize().x),
+                            muzzleWidth / 2 / static_cast<float>(tankTexture.getSize().y)
+                        ));
+
+                        bulletSprite.setPosition(sf::Vector2f(tankSprite.getPosition().x + MD, tankSprite.getPosition().y));
+
+                        bullets.push_back(bulletSprite);
+                    }
+            }
         }
+
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R) || sf::Joystick::isButtonPressed(0, 2))
         {
             if (isLose) {
                 isLose = false;
+                loseSound = true;
                 score = 0;
                 scoreText.setString("SCORE: " + std::to_string(score));
                 bullets.clear();
                 enemies.clear();
-                tankShape.setPosition(sf::Vector2f(0, widowHeigth - (muzzleHeigth + tankHeigth)));
+                tankSprite.setPosition(sf::Vector2f(0, widowHeigth - (muzzleHeigth + tankHeigth)));
             }
         }
 
@@ -145,6 +260,12 @@ int main()
             enemies[i].move(sf::Vector2f(0.f, enemyV * dt));
             if (enemies[i].getPosition().y >= (widowHeigth - tankHeigth - muzzleHeigth - muzzleWidth * 0.75)) {
                 isLose = true;
+                if (loseSound) {
+                    lose.play();
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                    loseSound = false;
+                }
+
             }
         }
 
@@ -159,6 +280,7 @@ int main()
                     j = enemies.erase(j);
         
                     bulletDestroyed = true;
+                    death.play();
                 } else {
                     ++j;
                 }
@@ -174,9 +296,10 @@ int main()
 
         window.clear();
         if(!isLose) {
-            window.draw(tankShape);
+            window.draw(backgroundSprite);
+            window.draw(tankSprite);
             window.draw(scoreText);
-            window.draw(line);
+            // window.draw(line);
             for (int i = 0; i < bullets.size(); i++) {
                 window.draw(bullets[i]);
             }
@@ -184,8 +307,10 @@ int main()
                 window.draw(enemies[i]);
             }
         } else {
+            window.draw(backgroundSprite);
             finishText.setString("YOUR SCORE: " + std::to_string(score) + "\n TO RESTART PRESS X");
             window.draw(finishText);
+
         }
 
         window.display();
